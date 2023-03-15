@@ -1,0 +1,30 @@
+{
+  "name": "kazany-passwordmanager",
+  "version": "1.0.0",
+  "description": "password manager for the set of tools Kazany",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohamedOutougane/Kazany-PasswordManager.git"
+  },
+  "author": "Mohamed OUTOUGANE",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MohamedOutougane/Kazany-PasswordManager/issues"
+  },
+  "homepage": "https://github.com/MohamedOutougane/Kazany-PasswordManager#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
