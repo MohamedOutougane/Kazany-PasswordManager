@@ -1,4 +1,5 @@
 const Record = require('../models/recordModel');
+const { encrypt, decrypt } = require('../middleware/encryptionMiddleware');
 
 // @desc:   This get all the records
 // @route:  GET /api/records/
@@ -6,7 +7,19 @@ const Record = require('../models/recordModel');
 const getRecords = async (req, res) => {
 
     // find all the records in the database
-    const records = await Record.find();    
+    const records = await Record.find();
+    
+    // for each record, decrypt and display the password
+    records.forEach(record => {
+
+        const encryption = {
+            iv: record.iv,
+            password: record.password
+        };
+
+        const decryptedPassword = decrypt(encryption);
+        record.password = decryptedPassword;
+    });
 
     // send the records in JSON format, the .status is optional
     res.status(200).json({
@@ -27,7 +40,15 @@ const getRecordById = async (req, res) => {
         res.status(400).json({
             message: "Enregistrement introuvable !",
         });
-    };       
+    };     
+    
+    // decrypt the password
+    const encryption = {
+        iv: record.iv,
+        password: record.password
+    };
+    const decryptedPassword = decrypt(encryption);
+    record.password = decryptedPassword;
 
     res.status(200).json({                                  
         message: `Voila l'enregistrement ${req.params.id} !`,
@@ -52,14 +73,17 @@ const createRecord = async (req, res) => {
             message: "Le mot de passe est requis !",   
         });
     } else {
+        // encrypt the password
+        const encryptedPassword = encrypt(req.body.password);
+
         // create a new record in the databases
         const record = await Record.create({
             name: req.body.name,
             pseudo: req.body.pseudo,
             email: req.body.email,
             url: req.body.url,
-            password: req.body.password,
-            salt: req.body.salt,
+            password: encryptedPassword.password, // give to the ddb the encrypted password
+            iv: encryptedPassword.iv, // give to the ddb the iv buffer
         });
 
         res.status(200).json({
@@ -99,15 +123,20 @@ const editRecord = async (req, res) => {
         if(!req.body.password) {
             req.body.password = record.password;
         };
-        if(!req.body.salt) {
-            req.body.salt = record.salt;
+        if(!req.body.iv) {
+            req.body.iv = record.iv;
         };
+
+        // encrypt the password
+        const encryptedPassword = encrypt(req.body.password);
 
         // update the record with the new data
         const editedRecord = await Record.findByIdAndUpdate(
             req.params.id, 
             req.body, 
-            { new: true }
+            { new: true },
+            req.body.password = encryptedPassword.password,
+            req.body.iv = encryptedPassword.iv,
         );      
 
         res.status(200).json({
