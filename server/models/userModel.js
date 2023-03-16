@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = mongoose.Scheme(
+const userSchema = mongoose.Schema(
     {
         name: {
             type: String,
@@ -15,14 +15,10 @@ const userSchema = mongoose.Scheme(
             type: String,
             required: [true, 'Tapez votre mot de passe'],
         },
-        salt: {
-            type: String,
-            required: true
-        },
     }, 
     {
         timestamps: true
     }
 );
 
-export default mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

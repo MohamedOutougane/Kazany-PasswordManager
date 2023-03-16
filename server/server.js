@@ -20,3 +20,4 @@ app.get('/', (req, res) => {                                //check if server is
 });
 
 app.use('/api/records', require('./routes/recordRoutes'));  // use the recordRoutes.js file for the /api/records routes
+app.use('/api/users', require('./routes/userRoutes'));      // use the userRoutes.js file for the /api/users routes
