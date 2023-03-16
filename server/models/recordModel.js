@@ -22,7 +22,7 @@ const recordSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        salt : {                                    // salt of the password
+        iv : {                                    // iv of the password
             type: String,
             required: true
         }
