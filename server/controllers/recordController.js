@@ -1,10 +1,11 @@
 const Record = require('../models/recordModel');
+const asyncHandler = require('express-async-handler');
 const { encrypt, decrypt } = require('../middlewares/encryptionMiddleware');
 
 // @desc:   This get all the records
 // @route:  GET /api/records/
 // @access: Private
-const getRecords = async (req, res) => {
+const getRecords = asyncHandler( async (req, res) => {
 
     // find all the records in the database
     const records = await Record.find();
@@ -26,12 +27,12 @@ const getRecords = async (req, res) => {
         message: "Liste des enregistrements !",
         records
     });                                  
-};
+});
 
 // @desc:   This get One record by id
 // @route:  GET /api/records/:id
 // @access: Private
-const getRecordById = async (req, res) => {
+const getRecordById = asyncHandler( async (req, res) => {
 
     // find the record by its id
     const record = await Record.findById(req.params.id);  
@@ -54,12 +55,12 @@ const getRecordById = async (req, res) => {
         message: `Voila l'enregistrement ${req.params.id} !`,
         record
     });
-};
+});
 
 // @desc:   This create a new record
 // @route:  POST /api/records/
 // @access: Private
-const createRecord = async (req, res) => {
+const createRecord = asyncHandler( async (req, res) => {
 
     // if the body of the request doesn't have a name property, send a 400 status code and a message
     if(!req.body.name) {
@@ -91,12 +92,12 @@ const createRecord = async (req, res) => {
             record,
         });
     };
-};
+});
 
 // @desc:   This update a record
 // @route:  PUT /api/records/:id
 // @access: Private
-const editRecord = async (req, res) => {
+const editRecord = asyncHandler( async (req, res) => {
 
     // find the record by its id
     const record = await Record.findById(req.params.id);  
@@ -144,12 +145,12 @@ const editRecord = async (req, res) => {
             editedRecord,
         });
     };
-};
+});
 
 // @desc:   This delete a record
 // @route:  DELETE /api/records/:id
 // @access: Private
-const deleteRecord = async (req, res) => {
+const deleteRecord = asyncHandler( async (req, res) => {
 
     // find the record by its id
     const record = await Record.findById(req.params.id);  
@@ -166,7 +167,7 @@ const deleteRecord = async (req, res) => {
     res.status(200).json({                                  
         message: `L'enregistrement ${req.params.id} a été supprimé !`
     });
-};
+});
 
 module.exports = {
     getRecords,
