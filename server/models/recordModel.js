@@ -6,6 +6,14 @@ const recordSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        pseudo : {                                  // pseudo of the app/website
+            type: String,
+            required: false
+        },
+        email : {                                   // email of the app/website
+            type: String,
+            required: false
+        },
         url : {                                     // url of the app/website
             type: String,
             required: false

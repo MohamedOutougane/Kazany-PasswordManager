@@ -2,7 +2,7 @@ const Record = require('../models/recordModel');
 
 // @desc:   This get all the records
 // @route:  GET /api/records/
-// @access: Public
+// @access: Private
 const getRecords = async (req, res) => {
 
     // find all the records in the database
@@ -13,6 +13,26 @@ const getRecords = async (req, res) => {
         message: "Liste des enregistrements !",
         records
     });                                  
+};
+
+// @desc:   This get One record by id
+// @route:  GET /api/records/:id
+// @access: Private
+const getRecordById = async (req, res) => {
+
+    // find the record by its id
+    const record = await Record.findById(req.params.id);  
+
+    if(!record) {
+        res.status(400).json({
+            message: "Enregistrement introuvable !",
+        });
+    };       
+
+    res.status(200).json({                                  
+        message: `Voila l'enregistrement ${req.params.id} !`,
+        record
+    });
 };
 
 // @desc:   This create a new record
@@ -35,6 +55,8 @@ const createRecord = async (req, res) => {
         // create a new record in the databases
         const record = await Record.create({
             name: req.body.name,
+            pseudo: req.body.pseudo,
+            email: req.body.email,
             url: req.body.url,
             password: req.body.password,
             salt: req.body.salt,
@@ -64,6 +86,12 @@ const editRecord = async (req, res) => {
         // if the body of the request doesn't have a property, set it to the property of the record
         if(!req.body.name) {
             req.body.name = record.name;
+        };
+        if(!req.body.pseudo) {
+            req.body.pseudo = record.pseudo;
+        };
+        if(!req.body.email) {
+            req.body.email = record.email;
         };
         if(!req.body.url) {
             req.body.url = record.url;
@@ -115,5 +143,6 @@ module.exports = {
     getRecords,
     createRecord,
     editRecord,
-    deleteRecord
+    deleteRecord,
+    getRecordById,
 };

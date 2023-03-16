@@ -5,6 +5,7 @@ const {
     createRecord, 
     editRecord, 
     deleteRecord,
+    getRecordById,
 } = require('../controllers/recordControllers');
 
 
@@ -14,7 +15,7 @@ router.route('/').get(getRecords).post(createRecord);  // same as above but with
 
 // router.put('/:id', editRecord);
 // router.delete('/:id', deleteRecord);
-router.route('/:id').put(editRecord).delete(deleteRecord);
+router.route('/:id').put(editRecord).delete(deleteRecord).get(getRecordById);
 
 
 module.exports = router;
