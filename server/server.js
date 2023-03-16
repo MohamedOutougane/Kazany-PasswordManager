@@ -13,9 +13,4 @@ app.get('/', (req, res) => {                                //check if server is
     res.send("Hello World!");                               // if so, send "Hello World!"
 });
 
-app.get('/api/records', (req, res) => {
-    res.status(200).json({                                  // the .status is optional, it is a good practice to send it
-        message: "Page des enregistrements !"
-    });                                                     // check if we get the json object when we go to localhost:3001/api/records
-});     
-
+app.use('/api/records', require('./routes/recordRoutes'));  // use the recordRoutes.js file for the /api/records routes
