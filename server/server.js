@@ -1,6 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
+const connectDB = require('./config/db');
 const port = process.env.PORT || 3001;                      // set port to the environment variable PORT or 3001
+
+connectDB();                                                // connect to the database
 
 const app = express();
 
