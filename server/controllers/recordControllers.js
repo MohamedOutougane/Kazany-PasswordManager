@@ -2,7 +2,7 @@
 // @route:  GET /api/records/
 // @access: Public
 const getRecords = async (req, res) => {
-    res.status(200).json({                      // the .status is optional, it is a good practice to send it
+    res.status(200).json({                              // the .status is optional, it is a good practice to send it
         message: "Page des enregistrements !"
     });
 };
@@ -11,6 +11,13 @@ const getRecords = async (req, res) => {
 // @route:  POST /api/records/
 // @access: Private
 const createRecord = async (req, res) => {
+
+    if(!req.body.text) {
+        res.status(400).json({
+            message: "Le texte est requis !",          // if the body of the request doesn't have a text property, send a 400 status code and a message
+        });
+    };
+    
     res.status(200).json({                                  
         message: "Creer un enregistrement !"
     });
@@ -20,6 +27,13 @@ const createRecord = async (req, res) => {
 // @route:  PUT /api/records/:id
 // @access: Private
 const editRecord = async (req, res) => {
+
+    if(!req.body.text) {
+        res.status(400).json({
+            message: "Le texte est requis !",
+        });
+    }
+
     res.status(200).json({                                  
         message: `Modifier l'enregistrement ${req.params.id} !`
     });
