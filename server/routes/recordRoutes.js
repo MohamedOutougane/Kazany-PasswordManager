@@ -6,10 +6,10 @@ const {
     editRecord, 
     deleteRecord,
     getRecordById,
-} = require('../controllers/recordControllers');
+} = require('../controllers/recordController');
 
 
-// router.get('/', getRecords);            // route to get all the records from the recordControllers.js file
+// router.get('/', getRecords);            // route to get all the records from the recordController.js file
 // router.post('/', createRecord);
 router.route('/').get(getRecords).post(createRecord);  // same as above but with the route method
 

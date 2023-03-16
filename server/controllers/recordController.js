@@ -1,5 +1,5 @@
 const Record = require('../models/recordModel');
-const { encrypt, decrypt } = require('../middleware/encryptionMiddleware');
+const { encrypt, decrypt } = require('../middlewares/encryptionMiddleware');
 
 // @desc:   This get all the records
 // @route:  GET /api/records/
