@@ -1,10 +1,18 @@
+const Record = require('../models/recordModel');
+
 // @desc:   This get all the records
 // @route:  GET /api/records/
 // @access: Public
 const getRecords = async (req, res) => {
-    res.status(200).json({                              // the .status is optional, it is a good practice to send it
-        message: "Page des enregistrements !"
-    });
+
+    // find all the records in the database
+    const records = await Record.find();    
+
+    // send the records in JSON format, the .status is optional
+    res.status(200).json({
+        message: "Liste des enregistrements !",
+        records
+    });                                  
 };
 
 // @desc:   This create a new record
@@ -12,15 +20,31 @@ const getRecords = async (req, res) => {
 // @access: Private
 const createRecord = async (req, res) => {
 
-    if(!req.body.text) {
+    // if the body of the request doesn't have a name property, send a 400 status code and a message
+    if(!req.body.name) {
         res.status(400).json({
-            message: "Le texte est requis !",          // if the body of the request doesn't have a text property, send a 400 status code and a message
+            message: "Le texte est requis !",
+        });
+    }
+    // if the body of the request doesn't have a password property, send a 400 status code and a message 
+    else if (!req.body.password) {
+        res.status(400).json({
+            message: "Le mot de passe est requis !",   
+        });
+    } else {
+        // create a new record in the databases
+        const record = await Record.create({
+            name: req.body.name,
+            url: req.body.url,
+            password: req.body.password,
+            salt: req.body.salt,
+        });
+
+        res.status(200).json({
+            message: "Enregistrement créer !",
+            record,
         });
     };
-    
-    res.status(200).json({                                  
-        message: "Creer un enregistrement !"
-    });
 };
 
 // @desc:   This update a record
@@ -28,23 +52,62 @@ const createRecord = async (req, res) => {
 // @access: Private
 const editRecord = async (req, res) => {
 
-    if(!req.body.text) {
-        res.status(400).json({
-            message: "Le texte est requis !",
-        });
-    }
+    // find the record by its id
+    const record = await Record.findById(req.params.id);  
 
-    res.status(200).json({                                  
-        message: `Modifier l'enregistrement ${req.params.id} !`
-    });
+    if(!record) {
+        res.status(400).json({
+            message: "Enregistrement introuvable !",
+        });
+    } else {
+
+        // if the body of the request doesn't have a property, set it to the property of the record
+        if(!req.body.name) {
+            req.body.name = record.name;
+        };
+        if(!req.body.url) {
+            req.body.url = record.url;
+        };
+        if(!req.body.password) {
+            req.body.password = record.password;
+        };
+        if(!req.body.salt) {
+            req.body.salt = record.salt;
+        };
+
+        // update the record with the new data
+        const editedRecord = await Record.findByIdAndUpdate(
+            req.params.id, 
+            req.body, 
+            { new: true }
+        );      
+
+        res.status(200).json({
+            message: "Enregistrement modifié !",
+            editedRecord,
+        });
+    };
 };
 
 // @desc:   This delete a record
 // @route:  DELETE /api/records/:id
 // @access: Private
 const deleteRecord = async (req, res) => {
+
+    // find the record by its id
+    const record = await Record.findById(req.params.id);  
+
+    if(!record) {
+        res.status(400).json({
+            message: "Enregistrement introuvable !",
+        });
+    };
+
+    // delete the record
+    await Record.deleteOne();
+
     res.status(200).json({                                  
-        message: `Supprimer l'enregistrement ${req.params.id} !`
+        message: `L'enregistrement ${req.params.id} a été supprimé !`
     });
 };
 
