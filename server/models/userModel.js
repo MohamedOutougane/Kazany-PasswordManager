@@ -15,6 +15,10 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, 'Tapez votre mot de passe'],
         },
+        tokensRevokedAt: {
+            type: Date,
+            default: null
+        }
     }, 
     {
         timestamps: true
