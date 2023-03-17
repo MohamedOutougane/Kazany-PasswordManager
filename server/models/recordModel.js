@@ -11,13 +11,9 @@ const recordSchema = mongoose.Schema(
             type: String,
             required: [true, 'Tapez le nom de l\'enregistrement']
         },
-        pseudo : {                                  // pseudo of the app/website
+        connexion : {                                  // id of connection of the app/website
             type: String,
-            required: [false, 'Tapez le pseudo']
-        },
-        email : {                                   // email of the app/website
-            type: String,
-            required: [false, 'Tapez l\'email']
+            required: [false, 'Tapez l/identifiant de connexion']
         },
         url : {                                     // url of the app/website
             type: String,
