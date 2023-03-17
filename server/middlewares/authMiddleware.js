@@ -9,12 +9,20 @@ const protect = asyncHandler(async (req, res, next) => {
 
     // check if the request has a token and if it starts with 'Bearer' in the headers
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+
         try {
             // get the token from the headers
             token = req.headers.authorization.split(' ')[1];
 
             // verify the token by decoding it
             const decoded = jwt.verify(token, secret);
+
+            // find the user by the id in the token
+            const user = await User.findById(decoded.id);
+
+            if (user.tokensRevokedAt !== null && new Date(decoded.iat * 1000) < user.tokensRevokedAt) {
+                throw new Error('Token revoked');
+            };
 
             // get the user by the id in the token and remove the password from the user
             req.user = await User.findById(decoded.id).select('-password');
