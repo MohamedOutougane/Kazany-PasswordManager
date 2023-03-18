@@ -1,4 +1,5 @@
 import axios from 'axios';
+import authHeader from './authHeader';
 
 const API_URL = '/api/users/'; // TODO: move to config
 
@@ -17,8 +18,19 @@ const registerUser = async (userData) => {
     return response.data;
 };
 
+// Logout the user
+const logoutUser = async (data) => {
+
+    // i want to send a post request with the id of the user
+    await axios.post(API_URL + 'logout/' + data.idUser, null, { headers: authHeader() });
+
+    // i remove the user from the local storage
+    localStorage.removeItem('user');
+};
+
 const authService = {
-    registerUser
+    registerUser,
+    logoutUser
 };
 
 export default authService;
