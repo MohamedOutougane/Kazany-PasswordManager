@@ -1,15 +1,54 @@
 import React from 'react';
 import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser, reset } from '../features/auth/authSlice';
 
 function Header() {
+
+    // this hook allows me to redirect the user to another page
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
+
+    // declare variables 
+    let idUser;
+
+    //if there is a token
+    if (localStorage.getItem('user')) {
+        // i want to take the token from the local storage
+        const token = localStorage.getItem('user');
+
+        // i want to parse the token to get the id of the user
+        const tokenObject = JSON.parse(token);
+
+        // i want to take the id of the user from the token
+        idUser = tokenObject._id;
+    };
+
+    // i trigger the logout action and reset the auth state
+    const onLogout = () => {
+
+        // i want to remove the token from the local storage
+        dispatch(logoutUser(idUser));
+        dispatch(reset());
+        navigate('/login');
+    };
+
   return (
     <header className='header'>
         <div className='logo'>
             <Link to='/'>Kazany - Password Manager</Link>
         </div>
         <ul>
-            <li>
+            {user ? (
+                <li>
+                    <button className='btn' onClick={onLogout}>
+                        <FaSignOutAlt /> Déconnexion
+                    </button>
+                </li>
+            ) : (
+            <> <li>
                 <Link to='/login'>
                     <FaSignInAlt /> Connexion
                 </Link>
@@ -18,7 +57,8 @@ function Header() {
                 <Link to='/register'>
                     <FaUser /> Inscription
                 </Link>
-            </li>
+            </li> </>
+            )}
         </ul>
     </header>
   );
