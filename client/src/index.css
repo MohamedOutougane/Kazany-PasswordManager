@@ -177,6 +177,13 @@ h1, h2, h3 {
   transform: scale(0.98);
 }
 
+.disabled-btn {
+  background: #ccc;
+  color: #fff;
+  border: 1px solid #ccc;
+  cursor: not-allowed;
+}
+
 .loadingSpinnerContainer {
   position: fixed;
   top: 0;
@@ -199,17 +206,18 @@ h1, h2, h3 {
   animation: spin 1.2s linear infinite;
 }
 
-.password-criteria ul li.valid {
+.criteria ul li.valid {
   color: green;
 }
 
-.password-criteria ul li.notvalid {
+.criteria ul li.notvalid {
   color: red;
 }
 
-.password-criter {
+.criter {
   display: flex;
   align-items: center;
+  font-size: 0.75em;
 }
 
 .password-criteria {

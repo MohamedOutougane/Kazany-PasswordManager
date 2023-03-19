@@ -1,6 +1,11 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { FaSignInAlt } from 'react-icons/fa';
+import { loginUser, reset } from '../features/auth/authSlice';
+import Spinner from '../components/Spinner';
 
 function Login() {
 
@@ -11,10 +16,18 @@ function Login() {
     });
 
     // Extract properties from formData object using object destructuring
-    const { email, password, } = formData;
+    const { email, password } = formData;
+
+    // Initialize navigate and dispatch functions
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // Extract properties from auth state using useSelector hook
+    const { user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth);
 
     // it changes the state of the form when the user types in the input fields
     const onChange = (e) => {
+        
         setFormData((prevState) =>({
             ...prevState,   // Spread operator to copy all properties from previous state
             [e.target.name]: e.target.value // Set value of property to value of input field
@@ -23,8 +36,37 @@ function Login() {
 
     // Create onSubmit function
     const onSubmit = (e) => {
-        e.preventDefault(); // Prevent default behavior of form submission (page refresh)
+
+        // Prevent default behavior of form submission (page refresh)
+        e.preventDefault(); 
+
+         // Create user data object
+        const userData = {
+            email, 
+            password 
+        };
+
+        // Dispatch loginUser action
+        dispatch(loginUser(userData));
     };
+
+    // i use useEffect hook to display of the messages and redirect to dashboard page
+    useEffect(() => {
+            
+        // If there is an error, display error message
+        if (isError) {
+            toast.error(message);
+        };
+
+        // If user is successfully logged-in or he is already logged in, display success message and redirect to dashboard page
+        if (isSuccess || user) {
+            toast.success(message);
+            navigate('/dashboard');
+        };
+
+        dispatch(reset());
+    
+    }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   return (
     <>
