@@ -18,16 +18,6 @@ const registerUser = async (userData) => {
     return response.data;
 };
 
-// Logout the user
-const logoutUser = async (data) => {
-
-    // i want to send a post request with the id of the user
-    await axios.post(API_URL + 'logout/' + data, null, { headers: authHeader() });
-
-    // i remove the user from the local storage
-    localStorage.removeItem('user');
-};
-
 // login the user
 const loginUser = async (userData) => {
 
@@ -45,7 +35,6 @@ const loginUser = async (userData) => {
 
 const authService = {
     registerUser,
-    logoutUser,
     loginUser,
 };
 

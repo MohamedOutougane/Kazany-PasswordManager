@@ -1,17 +1,12 @@
 import React from 'react';
 import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser, reset } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 function Header() {
 
     // this hook allows me to redirect the user to another page
-    const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
-
-    // declare variables 
-    let idUser;
 
     // i trigger the logout action and reset the auth state
     const onLogout = () => {
@@ -19,20 +14,9 @@ function Header() {
         // i want to redirect the user to the login page
         window.location.replace('/login');
 
-        // i want to take the token from the local storage
-        const token = localStorage.getItem('user');
-
-        // i want to parse the token to get the id of the user
-        const tokenObject = JSON.parse(token);
-
-        // i want to take the id of the user from the token
-        idUser = tokenObject._id;
-
-        // i want to remove the token from the local storage
-        dispatch(logoutUser(idUser));
-        dispatch(reset());
+        // i want to delete the token from the local storage
+        localStorage.removeItem('user');
     };
-
 
   return (
     <header className='header'>

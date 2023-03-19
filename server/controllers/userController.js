@@ -217,51 +217,11 @@ const deleteUser = asyncHandler(async (req, res) => {
     };
 });
 
-// @desc:   This logout a user
-// @route:  POST /api/users/logout/:id
-// @access: Private
-const logoutUser = asyncHandler(async (req, res) => {
-
-    // find the user by its id
-    const user = await User.findById(req.params.id);
-
-    // if the user doesn't exist, send a 400 status code and a message
-    if (!user) {
-        res.status(404).json({
-            message: "Utilisateur introuvable !",
-        });
-    } else if (user.id.toString() !== req.user.id) {
-
-        // if the user id is not the same as the user id in the token, send a 401 status code and a message
-        res.status(401).json({
-            message: "Vous n'avez pas le droit de déconnecter cet utilisateur !",
-        });
-
-    } else {
-
-        req.body.tokensRevokedAt = new Date();
-
-        // update the record with the date for the revokedToken
-        const editedRovekedToken = await User.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true },
-        );
-
-        console.log(new Date());
-
-        res.status(201).json({
-            message: `Votre compte ${req.params.id} a été déconnecté !`,
-        });
-    };
-});
-
 module.exports = {
     registerUser,
     updateUser,
     deleteUser,
     loginUser,
     getMyData,
-    logoutUser,
 };
 
