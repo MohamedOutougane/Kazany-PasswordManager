@@ -7,9 +7,9 @@ function withAuth(Component) {
 
     if (!user) {
       return <Navigate to="/login" />;
-    }
+    };
 
-    return <Component {...props} />;
+    return <Component />;
   };
 }
 

@@ -14,8 +14,9 @@ function Header() {
     // declare variables 
     let idUser;
 
-    //if there is a token
-    if (localStorage.getItem('user')) {
+    // i trigger the logout action and reset the auth state
+    const onLogout = () => {
+
         // i want to take the token from the local storage
         const token = localStorage.getItem('user');
 
@@ -24,10 +25,6 @@ function Header() {
 
         // i want to take the id of the user from the token
         idUser = tokenObject._id;
-    };
-
-    // i trigger the logout action and reset the auth state
-    const onLogout = () => {
 
         // i want to remove the token from the local storage
         dispatch(logoutUser(idUser));
