@@ -11,6 +11,10 @@ const registerUser = asyncHandler(async (req, res) => {
     // strcturize the request body
     const { name, email, password } = req.body;
 
+    // regex to check the email
+    const regexLength = /^.{5,99}$/;
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     // check if all the fields are filled
     if (!name || !email || !password) {
         res.status(400).json({
@@ -18,6 +22,10 @@ const registerUser = asyncHandler(async (req, res) => {
         });
     // check if the password is at least 11 characters long, contains at least one uppercase letter,
     // one lowercase letter, one number and one special character
+    } else if (!regexLength.test(email) || !regexEmail.test(email)) {
+        res.status(400).json({
+            message: "L'email ne convient pas !",
+        });
     } else if (
         password.length < 11 &&
         password.length > 99 &&
