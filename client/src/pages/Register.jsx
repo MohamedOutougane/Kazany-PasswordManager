@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaUser } from 'react-icons/fa';
-import { RiCloseCircleFill, RiCheckboxCircleFill } from 'react-icons/ri';
+import { RiCloseCircleFill, RiCheckboxCircleFill, RiEyeFill, RiEyeCloseFill } from 'react-icons/ri';
 import { registerUser, reset } from '../features/auth/authSlice';
 import Spinner from '../components/Spinner';
 
@@ -63,6 +63,20 @@ function Register() {
     let disablePassword2 = true;
     // disable submit button by default
     let disableSubmit = true;
+
+    // password show/hide elements
+    const Eye = <RiEyeFill/>;
+    const EyeSlash = <RiEyeCloseFill/>;
+    // this is the eye for the password input
+    const [hidePassword, setHidePassword] = useState(true);
+    const showHidePassword = () => {
+        setHidePassword(!hidePassword);
+    };
+    // this is the eye for the password2 input
+    const [hidePassword2, setHidePassword2] = useState(true);
+    const showHidePassword2 = () => {
+        setHidePassword2(!hidePassword2);
+    };
 
     // it changes the state of the form when the user types in the input fields
     const onChange = (e) => {
@@ -189,18 +203,13 @@ function Register() {
 
         // If user is successfully registered or he is already logged in, display success message and redirect to dashboard page
         if (isSuccess || user) {
-            toast.success(message);
+            toast.success(message.message);
             navigate('/dashboard');
         };
 
         dispatch(reset());
     
     }, [user, isError, isSuccess, message, navigate, dispatch]);
-
-    // Display spinner while loading
-    if (isLoading) {
-        return <Spinner />
-    };
 
     return (
         <>
@@ -226,7 +235,11 @@ function Register() {
                         </div>
                     </div>
                     <div className="form-group">
-                        <input type="password" className="form-control" id="password" name="password" value={password} placeholder="Tapez votre mot de passe" onChange={onChange} disabled={disablePassword} />
+                        <div className="password-input">
+                            <input type={hidePassword ? "password" : "text" } className="form-control" id="password" name="password" value={password} placeholder="Tapez votre mot de passe" onChange={onChange} disabled={disablePassword} />
+                            <a onClick={showHidePassword}><i  style={{display: hidePassword === true ? 'flex' : 'none' }}>{Eye}</i></a>
+                            <a onClick={showHidePassword}><i  style={{display: hidePassword === false ? 'flex' : 'none' }}>{EyeSlash}</i></a>
+                        </div>
                         <div className="criteria" style={{display: disablePassword === false ? 'block' : 'none' }}>
                             <ul>
                                 <li className={passwordCriteria.hasLength ? 'valid criter' : 'notvalid criter'}> {passwordCriteria.hasLength ? <RiCheckboxCircleFill /> : <RiCloseCircleFill/>}&nbsp;  Au moins 11 caractères, maximum 99 caractères</li>
@@ -238,7 +251,11 @@ function Register() {
                         </div>
                     </div>
                     <div className="form-group">
-                        <input type="password" className="form-control" id="password2" name="password2" value={password2} placeholder="Confirmez votre mot de passe" onChange={onChange} disabled={disablePassword2} />
+                        <div className="password-input">
+                            <input type={hidePassword2 ? "password" : "text" } className="form-control" id="password2" name="password2" value={password2} placeholder="Confirmez votre mot de passe" onChange={onChange} disabled={disablePassword2} />
+                            <a onClick={showHidePassword2}><i  style={{display: hidePassword2 === true ? 'flex' : 'none' }}>{Eye}</i></a>
+                            <a onClick={showHidePassword2}><i  style={{display: hidePassword2 === false ? 'flex' : 'none' }}>{EyeSlash}</i></a>
+                        </div>
                         <div className="criteria" style={{display: disablePassword2 === false ? 'block' : 'none' }}>
                             <ul>
                                 <li style={{display: disableSubmit === true ? 'flex' : 'none' }} className='notvalid criter'> <RiCloseCircleFill/>&nbsp;  Votre mot de passe ne correspond pas !</li>

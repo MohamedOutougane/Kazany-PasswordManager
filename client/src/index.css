@@ -224,6 +224,23 @@ h1, h2, h3 {
   padding-left: 1em;
 }
 
+.password-input {
+  display: flex;
+  align-items: center;
+}
+
+.password-input i {
+  width: 40PX;
+  display: flex;
+  padding-bottom: 10px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.toast-position {
+  top: 40% !important;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
