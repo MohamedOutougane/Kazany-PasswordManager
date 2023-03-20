@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { RiEyeFill, RiEyeCloseFill } from 'react-icons/ri';
 import { FaSignInAlt } from 'react-icons/fa';
 import { loginUser, reset } from '../features/auth/authSlice';
 import Spinner from '../components/Spinner';
@@ -24,6 +25,15 @@ function Login() {
 
     // Extract properties from auth state using useSelector hook
     const { user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth);
+
+    // password show/hide elements
+    const Eye = <RiEyeFill/>;
+    const EyeSlash = <RiEyeCloseFill/>;
+    // this is the eye for the password input
+    const [hidePassword, setHidePassword] = useState(true);
+    const showHidePassword = () => {
+        setHidePassword(!hidePassword);
+    };
 
     // it changes the state of the form when the user types in the input fields
     const onChange = (e) => {
@@ -60,7 +70,7 @@ function Login() {
 
         // If user is successfully logged-in or he is already logged in, display success message and redirect to dashboard page
         if (isSuccess || user) {
-            toast.success(message);
+            toast.success(message.message);
             navigate('/dashboard');
         };
 
@@ -68,7 +78,7 @@ function Login() {
     
     }, [user, isError, isSuccess, message, navigate, dispatch]);
 
-  return (
+    return (
     <>
         <section className="heading">
             <h1>
@@ -83,7 +93,11 @@ function Login() {
                     <input type="text" className="form-control" id="email" name="email" value={email} placeholder="Tapez votre email" onChange={onChange} />
                 </div>
                 <div className="form-group">
-                    <input type="password" className="form-control" id="password" name="password" value={password} placeholder="Tapez votre mot de passe" onChange={onChange} />
+                    <div className="password-input">
+                        <input type={hidePassword ? "password" : "text" } className="form-control" id="password" name="password" value={password} placeholder="Tapez votre mot de passe" onChange={onChange} />
+                        <a onClick={showHidePassword}><i  style={{display: hidePassword === true ? 'flex' : 'none' }}>{Eye}</i></a>
+                        <a onClick={showHidePassword}><i  style={{display: hidePassword === false ? 'flex' : 'none' }}>{EyeSlash}</i></a>
+                    </div>
                 </div>
                 <div className='form-group'>
                     <input type="submit" className="btn btn-block" value="Connexion"/>
