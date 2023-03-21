@@ -2,6 +2,7 @@ import React from 'react';
 import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import logoKPM3 from '../logoKPM3.png'
 
 function Header() {
 
@@ -21,6 +22,7 @@ function Header() {
   return (
     <header className='header'>
         <div className='logo'>
+            <Link to='/'><img src={logoKPM3} className="App-logo" alt="logo" /></Link>
             <Link to='/'>Kazany - Password Manager</Link>
         </div>
         <ul>
