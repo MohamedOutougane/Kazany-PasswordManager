@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { RiEyeFill, RiEyeCloseFill } from 'react-icons/ri';
-import { createRecord, reset } from '../features/records/recordSlice';
+import { getRecords, createRecord, reset } from '../features/records/recordSlice';
 import recordService from '../features/records/recordService';
 
+// Composant RecordForm pour la gestion de la création d'un nouvel enregistrement
 function RecordForm() {
 
+    // Utilisation du hook useState pour gérer l'état du formulaire
     const [formData, setFormData] = useState({
         name: '',
         connexion: '',
@@ -19,33 +21,36 @@ function RecordForm() {
 
     const dispatch = useDispatch();
 
-    const { record, isLoading, isError, isSuccess, message } = useSelector((state) => state.records);
+    // Sélection des états à partir du store Redux
+    const { record, isError, isSuccess, message } = useSelector((state) => state.records);
 
-    // password show/hide elements
+    // Eléments pour afficher ou masquer le mot de passe
     const Eye = <RiEyeFill />;
     const EyeSlash = <RiEyeCloseFill />;
-    // this is the eye for the password input
+    // État pour masquer ou afficher le mot de passe
     const [hidePassword, setHidePassword] = useState(true);
     const showHidePassword = () => {
         setHidePassword(!hidePassword);
     };
 
+    // Gérer les changements de valeur dans les champs du formulaire
     const onChange = (e) => {
 
-        // Extract name and value properties from event object using object destructuring
+        // Extraire les propriétés name et value de l'objet event en utilisant la déstructuration d'objet
         const { name, value } = e.target;
 
-        // Set state of form data object
+        // Définir l'état de l'objet formData
         setFormData((prevState) => ({
-            ...prevState,   // Spread operator to copy all properties from previous state
-            [name]: value // Set value of property to value of input field
+            ...prevState,   // Opérateur de décomposition pour copier toutes les propriétés de l'état précédent
+            [name]: value // Définir la valeur de la propriété à la valeur du champ de saisie
         }));
     };
 
+    // Gérer la soumission du formulaire
     const onSubmit = e => {
         e.preventDefault();
 
-        // Create user data object
+        // Créer un objet de données d'enregistrement
         const recordData = {
             name,
             connexion,
@@ -53,11 +58,11 @@ function RecordForm() {
             password
         };
 
-        // Dispatch createRecord action
+        // Dispatch l'action createRecord
         dispatch(createRecord(recordData));
+        dispatch(getRecords());
 
-        // Reset the form
-        // Reset the form
+        // Réinitialiser le formulaire
         setFormData({
             name: '',
             connexion: '',
@@ -66,23 +71,25 @@ function RecordForm() {
         });
     }
 
-    // i use useEffect hook to display of the messages 
+    // Utiliser le hook useEffect pour afficher les messages
     useEffect(() => {
 
-        // If there is an error, display error message
+        // S'il y a une erreur, afficher le message d'erreur
         if (isError) {
             toast.error(message);
         };
 
-        // If record is successfully created, display success message 
+        // Si l'enregistrement est créé avec succès, afficher le message de succès
         if (isSuccess || record) {
             toast.success(message.message);
         };
 
+        // Réinitialiser l'état de l'enregistrement
         dispatch(reset());
 
     }, [record, isError, isSuccess, message, dispatch]);
 
+    // État pour afficher ou masquer le formulaire
     const [showForm, setShowForm] = useState(false);
     const toggleForm = () => {
         setShowForm((prevShowForm) => !prevShowForm);
