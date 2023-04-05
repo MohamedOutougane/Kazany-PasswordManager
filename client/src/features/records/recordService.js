@@ -12,8 +12,17 @@ const createRecord = async (recordData) => {
     return response.data;
 }
 
+// Get all records
+const getRecords = async () => {
+
+    const response = await axios.get(API_URL, { headers: authHeader() });
+    
+    return response.data;
+};
+
 const recordService = {
     createRecord,
+    getRecords,
 };
 
 export default recordService;
