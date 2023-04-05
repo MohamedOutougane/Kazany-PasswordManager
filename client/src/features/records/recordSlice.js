@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import recordService from './recordService';
 
-// // Get user from the local storage
-// const user = Json.parse(localStorage.getItem('user'));
-
 const initialState = {
     records: [],
     isLoading: false,
@@ -14,15 +11,22 @@ const initialState = {
 
 // Create a new record
 export const createRecord = createAsyncThunk('record/createRecord', async (record, thunkAPI) => {
-
     try {
         return await recordService.createRecord(record);
     } catch (error) {
-
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
         return thunkAPI.rejectWithValue(message);
     };
+});
+
+// Fetch all records
+export const getRecords = createAsyncThunk('record/getRecords', async (_, thunkAPI) => {
+    try {
+        return await recordService.getRecords();
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
 });
 
 export const recordSlice = createSlice({
@@ -53,8 +57,22 @@ export const recordSlice = createSlice({
                 state.message = action.payload;
                 state.record = null;
             })
+            .addCase(getRecords.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getRecords.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.records = action.payload;
+            })
+            .addCase(getRecords.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                state.records = [];
+            })
     }
 });
 
-export const { reset } = recordSlice.actions
-export default recordSlice.reducer
+export const { reset } = recordSlice.actions;
+export default recordSlice.reducer;
